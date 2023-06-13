@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import css from './ImageGallery.module.css';
 import axios from 'axios';
 import ImageGalleryItem from 'components/ImageGalleryItem';
-import { RotatingLines } from 'react-loader-spinner';
+import { RotatingLines } from 'npm i react-loader-spinner';
 import { Button } from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
 import PropTypes from 'prop-types';
