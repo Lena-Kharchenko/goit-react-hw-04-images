@@ -1,70 +1,51 @@
 import { useState, useEffect } from 'react';
 import css from './ImageGallery.module.css';
-import axios from 'axios';
+
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import { RotatingLines } from 'npm i react-loader-spinner';
 import { Button } from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
 import PropTypes from 'prop-types';
+import SearchImg from 'API/searchImg';
 
-const baseUrl = 'https://pixabay.com/api/';
-const API_KEY = '35661093-d03a926eaf01982ed473b40fb';
+const getImgApi = new SearchImg();
 
-export default function ImageGallery() {
-
-   const [gallery, setGallery] = useState([]);
-  //  const [page, setPage] = useState(1);
-   const [status, setStatus] = useState('idle');
-   const [buttonLoader, setButtonLoader] = useState(false);
-   const [openModal, setOpenModal] = useState(false);
-   const [activeImg, setActiveImg] = useState(null);
-
-  // state = {
-  //   galery: [],
-  //   page: 1,
-  //   status: 'idle',
-  //   buttonLoader: false,
-  //   openModal: false,
-  //   activeImg: null,
-  // };
+export default function ImageGallery({ searchByInputData }) {
+  const [gallery, setGallery] = useState([]);
+  const [status, setStatus] = useState('idle');
+  const [buttonLoader, setButtonLoader] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [activeImg, setActiveImg] = useState(null);
 
   // перед кожним оновленням
-
-useEffect(()=> {
-  if (searchByInputData === null) {
-    return;
-  }
-
-
- // перевіряємо чи змінилось слово у пошуку
- if (searchByInputData !== getImgApi.search) {
-  getImgApi.resetPage();
- }
-  
-
-      try {
-
-        setStatus('pending');
-        getImgApi.setSearch(searchByInputData);
-        getImgApi.getImg()
-        .then(response => setGallery([...response], setStatus('resolved')));
-
-      } catch (error) {
-        setStatus('rejected');
-      }
-
+  useEffect(() => {
+    //при першому рендері інпут пустий, нічого не рендеримо
+    if (searchByInputData === null) {
       return;
     }
 
+    //якщо пропс відміний від наших даних робимо запит на сервер
+    if (searchByInputData !== getImgApi.search) {
+      getImgApi.resetPage();
 
-    // перевіряємо чи користувач хоче підвантажити ще картинки
-
+      try {
+        setStatus('pending');
+        getImgApi.setSearch(searchByInputData);
+        getImgApi
+          .getImg()
+          .then(response => setGallery([...response], setStatus('resolved')));
+      } catch {
+        setStatus('rejected');
+      }
+      return;
+    }
+    //якщо ми натиснули на кнопку loadMore йдемо по наступну порцію фотографій
     if (buttonLoader) {
       try {
         getImgApi.setSearch(searchByInputData);
         getImgApi.getImg().then(response =>
-          setGalery(
-            [...galery, ...response],
+          setGallery(
+            [...gallery, ...response],
             setButtonLoader(false),
             setTimeout(() => {
               window.scrollBy({
@@ -78,15 +59,13 @@ useEffect(()=> {
         setStatus('rejected');
       }
     }
-  }, [searchByInputData, galery, buttonLoader]);
+  }, [searchByInputData, gallery, buttonLoader]);
 
-  
-  // Перегортаєм на наступну сторінку та замість кнопки ставим load more
+  // Перегортаєм на наступну сторінку та замість кнопки ставим завантаження
+
   const handleAddImg = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-      buttonLoader: true,
-    }));
+    getImgApi.addPage();
+    setButtonLoader(true);
   };
 
   // відкриває/закриває модалку
