@@ -79,8 +79,6 @@ export default function ImageGallery({ searchByInputData }) {
     toglleModal();
   };
 
-  // render() {
-  //   const { status, gallery, buttonLoader, activeImg, openModal } = this.state;
   // якщо зайшли в перший раз на сайт
   if (status === 'idle') {
     return (
