@@ -15,18 +15,18 @@ export default function Modal({ largeImageURL, toglleModal }) {
     };
   });
 
-  showSceleton = () => {
+  const showSceleton = () => {
     setScelet(false);
   };
 
-  handleKeyDown = event => {
+  const handleKeyDown = event => {
     if (event.code === 'Escape') {
       toglleModal();
     }
   };
 
-  const overlayClick = e => {
-    if (e.currentTarget === e.target) {
+  const overlayClick = event => {
+    if (event.currentTarget === event.target) {
       toglleModal();
     }
   };
