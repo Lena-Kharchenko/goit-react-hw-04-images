@@ -1,16 +1,24 @@
-export const App = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
-  );
-};
+import { useState } from 'react';
+import Searchbar from './Searchbar';
+import ImageGallery from './ImageGallery';
+
+export default function App() {
+
+   const [searchImg, setSearchImg] = useState(null);
+  // state = {
+  //   searchImg: null,
+  // };
+
+  const setSearchText(data) {
+    setSearchImg({ searchImg: data });
+  };
+
+
+    return (
+      <>
+        <Searchbar valueData={setSearchText} />
+        <ImageGallery searchByInputData={setSearchImg} />
+      </>
+    );
+  
+}

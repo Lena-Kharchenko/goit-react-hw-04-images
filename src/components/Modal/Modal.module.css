@@ -1,0 +1,66 @@
+/*
+ * Стили компонента Modal
+ */
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1200;
+}
+
+.Modal {
+  min-width: 900px;
+  min-height: 600px;
+  max-height: 600px;
+
+  max-width: 100%;
+  overflow: hidden;
+
+  position: relative;
+}
+
+.Button {
+  top: 40px;
+  right: 40px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  border: none;
+  position: absolute;
+}
+
+.Button::before {
+  display: block;
+  content: '';
+  width: 40px;
+  height: 4px;
+  border-radius: 5px;
+  background-color: rgb(22, 12, 12);
+  transform: rotate(45deg) translate(-7px, 10px);
+}
+
+.Button::after {
+  display: block;
+  content: '';
+  width: 40px;
+  height: 4px;
+  border-radius: 5px;
+  background-color: rgb(22, 12, 12);
+  transform: rotate(-45deg) translate(-7px, -10px);
+}
+
+.Button:hover::after {
+  background-color: rgb(144, 145, 146);
+}
+
+.Button:hover::before {
+  background-color: rgb(144, 145, 146);
+}
