@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import css from './ImageGallery.module.css';
 import axios from 'axios';
 import ImageGalleryItem from 'components/ImageGalleryItem';
@@ -10,18 +10,40 @@ import PropTypes from 'prop-types';
 const baseUrl = 'https://pixabay.com/api/';
 const API_KEY = '35661093-d03a926eaf01982ed473b40fb';
 
-export default class ImageGallery extends Component {
-  state = {
-    galery: [],
-    page: 1,
-    status: 'idle',
-    buttonLoader: false,
-    openModal: false,
-    activeImg: null,
-  };
+export default function ImageGallery() {
+
+   const [galery, setGallery] = useState([]);
+   const [page, setPage] = useState(1);
+   const [status, setStatus] = useState('idle');
+   const [buttonLoadet, setButtonLoader] = useState(false);
+   const [openModal, setOpenModal] = useState(false);
+   const [activeImg, setActiveImg] = useState(null);
+
+  // state = {
+  //   galery: [],
+  //   page: 1,
+  //   status: 'idle',
+  //   buttonLoader: false,
+  //   openModal: false,
+  //   activeImg: null,
+  // };
 
   // перед кожним оновленням
-  async componentDidUpdate(prevProps, prevState) {
+
+useEffect(()=> {
+  if (searchByInputData === null) {
+    return;
+  }
+})
+
+ // перевіряємо чи змінилось слово у пошуку
+ if (searchByInputData !== getImgApi.search) {
+  getImgApi.resetPage();
+ }
+  
+
+
+async componentDidUpdate(prevProps, prevState) {
     const text = this.props.searchByInputData;
     const { page } = this.state;
 
@@ -33,12 +55,11 @@ export default class ImageGallery extends Component {
         const response = await axios.get(
           `${baseUrl}?q=${text}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
         );
-        this.setState({
-          galery: [...response.data.hits],
-          status: 'resolved',
-        });
+        setGallery([...response.data.hits],
+          setStatus('resolved'),
+        );
       } catch (error) {
-        this.setState({ status: 'rejected' });
+        setStatus('rejected');
       }
     }
     // перевіряємо чи користувач хоче підвантажити ще картинки
