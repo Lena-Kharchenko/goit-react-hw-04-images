@@ -12,10 +12,10 @@ const API_KEY = '35661093-d03a926eaf01982ed473b40fb';
 
 export default function ImageGallery() {
 
-   const [galery, setGallery] = useState([]);
-   const [page, setPage] = useState(1);
+   const [gallery, setGallery] = useState([]);
+  //  const [page, setPage] = useState(1);
    const [status, setStatus] = useState('idle');
-   const [buttonLoadet, setButtonLoader] = useState(false);
+   const [buttonLoader, setButtonLoader] = useState(false);
    const [openModal, setOpenModal] = useState(false);
    const [activeImg, setActiveImg] = useState(null);
 
@@ -34,7 +34,7 @@ useEffect(()=> {
   if (searchByInputData === null) {
     return;
   }
-})
+
 
  // перевіряємо чи змінилось слово у пошуку
  if (searchByInputData !== getImgApi.search) {
@@ -42,53 +42,47 @@ useEffect(()=> {
  }
   
 
-
-async componentDidUpdate(prevProps, prevState) {
-    const text = this.props.searchByInputData;
-    const { page } = this.state;
-
-    // перевіряємо чи змінилось слово у пошуку
-    if (prevProps.searchByInputData !== text) {
-      this.setState({ status: 'pending', page: 1 });
-
       try {
-        const response = await axios.get(
-          `${baseUrl}?q=${text}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-        );
-        setGallery([...response.data.hits],
-          setStatus('resolved'),
-        );
+
+        setStatus('pending');
+        getImgApi.setSearch(searchByInputData);
+        getImgApi.getImg()
+        .then(response => setGallery([...response], setStatus('resolved')));
+
       } catch (error) {
         setStatus('rejected');
       }
+
+      return;
     }
+
+
     // перевіряємо чи користувач хоче підвантажити ще картинки
-    if (prevState.page !== page && page !== 1) {
-      console.log('Картинки підгрузились');
+
+    if (buttonLoader) {
       try {
-        const response = await axios.get(
-          `${baseUrl}?q=${text}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+        getImgApi.setSearch(searchByInputData);
+        getImgApi.getImg().then(response =>
+          setGalery(
+            [...galery, ...response],
+            setButtonLoader(false),
+            setTimeout(() => {
+              window.scrollBy({
+                top: window.innerHeight - 170,
+                behavior: 'smooth',
+              });
+            }, 250)
+          )
         );
-        this.setState(
-          prevState => ({
-            galery: [...prevState.galery, ...response.data.hits],
-            buttonLoader: false,
-          }),
-          () => {
-            window.scrollBy({
-              top: window.innerHeight - 170,
-              behavior: 'smooth',
-            });
-          }
-        );
-      } catch (error) {
-        this.setState({ status: 'rejected' });
+      } catch {
+        setStatus('rejected');
       }
     }
-  }
+  }, [searchByInputData, galery, buttonLoader]);
 
+  
   // Перегортаєм на наступну сторінку та замість кнопки ставим load more
-  handleAddImg = () => {
+  const handleAddImg = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
       buttonLoader: true,
