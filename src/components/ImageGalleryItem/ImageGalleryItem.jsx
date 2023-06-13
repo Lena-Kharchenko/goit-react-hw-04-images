@@ -1,44 +1,41 @@
 import css from './ImageGalleryItem.module.css';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { useState } from 'react';
 
-export class ImageGalleryItem extends Component {
-  state = {
-    scelet: true,
+export default function ImageGalleryItem() {
+  const [scelet, setScelet] = useState(true);
+
+  // state = {
+  //   scelet: true,
+  // };
+
+  const showSceleton = () => {
+    setScelet(false);
   };
 
-  showSceleton = () => {
-    this.setState({ scelet: false });
-  };
-
-  render() {
-    const { src, alt, onChange, index } = this.props;
-    return (
-      <li className={css['ImageGalleryItem']}>
-        {this.state.scelet ? (
-          <img
-            onLoad={this.showSceleton}
-            index={index}
-            className={css['ImageGalleryItem-scelet']}
-            src={src}
-            alt={alt}
-          />
-        ) : (
-          <img
-            onLoad={this.showSceleton}
-            index={index}
-            onClick={onChange}
-            className={css['ImageGalleryItem-image']}
-            src={src}
-            alt={alt}
-          />
-        )}
-      </li>
-    );
-  }
+  return (
+    <li className={css['ImageGalleryItem']}>
+      {scelet ? (
+        <img
+          onLoad={showSceleton}
+          index={index}
+          className={css['ImageGalleryItem-scelet']}
+          src={src}
+          alt={alt}
+        />
+      ) : (
+        <img
+          onLoad={showSceleton}
+          index={index}
+          onClick={onChange}
+          className={css['ImageGalleryItem-image']}
+          src={src}
+          alt={alt}
+        />
+      )}
+    </li>
+  );
 }
-
-export default ImageGalleryItem;
 
 ImageGalleryItem.propTypes = {
   src: PropTypes.string,
