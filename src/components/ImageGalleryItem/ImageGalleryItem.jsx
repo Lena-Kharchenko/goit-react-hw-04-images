@@ -2,7 +2,7 @@ import css from './ImageGalleryItem.module.css';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-export default function ImageGalleryItem() {
+export default function ImageGalleryItem({ src, alt, onChange, index }) {
   const [scelet, setScelet] = useState(true);
 
   // state = {
