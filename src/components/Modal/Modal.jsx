@@ -6,13 +6,7 @@ import PropTypes from 'prop-types';
 const modalRoot = document.querySelector('#modal-root');
 
 export default function Modal({ largeImageURL, toglleModal }) {
-  // const [returnSkeleton, setReturnSceleton] = useState(true);
   const [scelet, setScelet] = useState(true);
-
-  // state = {
-  //   returnSkeleton: true,
-  //   scelet: true,
-  // };
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -20,11 +14,6 @@ export default function Modal({ largeImageURL, toglleModal }) {
       window.removeEventListener('keydown', handleKeyDown);
     };
   });
-
-  // useEffect(() => {
-  //   window.removeEventListener('keydown', handleKeyDown);
-  //   window.removeEventListener('load', showSceleton);
-  // });
 
   showSceleton = () => {
     setScelet(false);
